@@ -27,6 +27,17 @@ public class Controller {
     }
 
     public void allStep() {
+        // type check the program
+        try {
+            ProgramState prgState = repo.getProgramStateList().get(0);
+            prgState.typeCheck();
+        } catch (InterpreterException e) {
+            System.err.println("Type Error!");
+            System.err.println(e.getMessage());
+            return;
+        }
+
+        // run
         executor = Executors.newFixedThreadPool(numThreads);
         List<ProgramState> prgStates = removeCompletedPrograms(repo.getProgramStateList());
         try {

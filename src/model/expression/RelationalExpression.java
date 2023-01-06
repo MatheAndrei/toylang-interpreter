@@ -3,7 +3,10 @@ package model.expression;
 import exception.InterpreterException;
 import model.adt.IHeap;
 import model.adt.ISymTable;
+import model.adt.ITypeEnv;
 import model.operators.RelationalOperator;
+import model.type.BoolType;
+import model.type.IType;
 import model.type.IntType;
 import model.value.BoolValue;
 import model.value.IValue;
@@ -48,6 +51,17 @@ public class RelationalExpression implements IExpression {
         }
 
         return result;
+    }
+
+    @Override
+    public IType typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType type1 = expr1.typeCheck(typeEnv);
+        IType type2 = expr2.typeCheck(typeEnv);
+        if (!type1.equals(new IntType()))
+            throw new InterpreterException("First operand " + expr1 + " isn't an integer!");
+        if (!type2.equals(new IntType()))
+            throw new InterpreterException("Second operand " + expr2 + " isn't an integer!");
+        return new BoolType();
     }
 
     @Override

@@ -4,6 +4,7 @@ import exception.InterpreterException;
 import model.ProgramState;
 import model.adt.IHeap;
 import model.adt.ISymTable;
+import model.adt.ITypeEnv;
 import model.expression.IExpression;
 import model.type.IType;
 import model.type.RefType;
@@ -44,6 +45,15 @@ public class WHStatement implements IStatement {
         heap.update(address, value);
 
         return null;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType idType = typeEnv.lookUp(id);
+        IType exprType = expr.typeCheck(typeEnv);
+        if (!idType.equals(new RefType(exprType)))
+            throw new InterpreterException("Type of value referenced by variable " + id + " and expression " + expr + " do not match!");
+        return typeEnv;
     }
 
     @Override

@@ -103,6 +103,10 @@ public class ProgramState {
         return currentStmt.execute(this);
     }
 
+    public void typeCheck() throws InterpreterException {
+        originalProgram.typeCheck(new TypeEnv<>());
+    }
+
     @Override
     public String toString() {
         return String.format(

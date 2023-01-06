@@ -3,6 +3,7 @@ package model.statement;
 import exception.InterpreterException;
 import model.ProgramState;
 import model.adt.*;
+import model.type.IType;
 import model.value.IValue;
 import model.value.StringValue;
 
@@ -34,6 +35,12 @@ public class ForkStatement implements IStatement {
         );
 
         return thread;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        stmt.typeCheck(typeEnv.deepCopy());
+        return typeEnv;
     }
 
     @Override

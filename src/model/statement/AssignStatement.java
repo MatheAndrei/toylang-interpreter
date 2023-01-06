@@ -4,6 +4,7 @@ import exception.InterpreterException;
 import model.ProgramState;
 import model.adt.IHeap;
 import model.adt.ISymTable;
+import model.adt.ITypeEnv;
 import model.expression.IExpression;
 import model.type.IType;
 import model.value.IValue;
@@ -32,6 +33,15 @@ public class AssignStatement implements IStatement {
         symTable.update(id, value);
 
         return null;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType idType = typeEnv.lookUp(id);
+        IType exprType = expr.typeCheck(typeEnv);
+        if (!idType.equals(exprType))
+            throw new InterpreterException("Type of variable " + id + " and type of assigned expression " + expr + " doesn't match!");
+        return typeEnv;
     }
 
     @Override

@@ -5,6 +5,7 @@ import model.ProgramState;
 import model.adt.IFileTable;
 import model.adt.IHeap;
 import model.adt.ISymTable;
+import model.adt.ITypeEnv;
 import model.expression.IExpression;
 import model.type.IType;
 import model.type.StringType;
@@ -46,6 +47,14 @@ public class CloseRFile implements IStatement {
         }
 
         return null;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType type = expr.typeCheck(typeEnv);
+        if (!type.equals(new StringType()))
+            throw new InterpreterException("Invalid file name!");
+        return typeEnv;
     }
 
     @Override

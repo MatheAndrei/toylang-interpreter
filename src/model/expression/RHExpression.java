@@ -3,10 +3,10 @@ package model.expression;
 import exception.InterpreterException;
 import model.adt.IHeap;
 import model.adt.ISymTable;
+import model.adt.ITypeEnv;
 import model.type.IType;
 import model.type.RefType;
 import model.value.IValue;
-import model.value.IntValue;
 import model.value.RefValue;
 
 public class RHExpression implements IExpression {
@@ -30,6 +30,15 @@ public class RHExpression implements IExpression {
         IValue result = heap.lookUp(address);
 
         return result;
+    }
+
+    @Override
+    public IType typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType type = expr.typeCheck(typeEnv);
+        if (!(type instanceof RefType))
+            throw new InterpreterException("Expression " + expr + " does not evaluate to a Ref value!");
+        RefType refType = (RefType)type;
+        return refType.getInner();
     }
 
     @Override

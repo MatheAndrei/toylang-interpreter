@@ -5,6 +5,7 @@ import model.ProgramState;
 import model.adt.IExeStack;
 import model.adt.IHeap;
 import model.adt.ISymTable;
+import model.adt.ITypeEnv;
 import model.expression.IExpression;
 import model.type.BoolType;
 import model.type.IType;
@@ -38,6 +39,15 @@ public class WhileStatement implements IStatement {
         }
 
         return null;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType condType = expr.typeCheck(typeEnv);
+        if (!condType.equals(new BoolType()))
+            throw new InterpreterException("Condition expression " + expr + " isn't a boolean!");
+        stmt.typeCheck(typeEnv.deepCopy());
+        return typeEnv;
     }
 
     @Override

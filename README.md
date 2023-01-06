@@ -17,9 +17,10 @@ Interpreter for a toy programming language made in Java :coffee:
   - heap
   - file table
   - output (for printing)
+- reading from files (only integers)
 - garbage collector
-- reading from files
 - multithreading
+- static type checking
 
 ### :no_entry: Limitations
 - certainly no limitations :trollface:

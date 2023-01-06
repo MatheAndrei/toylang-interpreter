@@ -3,6 +3,7 @@ package model.statement;
 import exception.InterpreterException;
 import model.ProgramState;
 import model.adt.ISymTable;
+import model.adt.ITypeEnv;
 import model.type.*;
 import model.value.BoolValue;
 import model.value.IValue;
@@ -39,6 +40,12 @@ public class VarDeclStatement implements IStatement {
         symTable.put(id, value);
 
         return null;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        typeEnv.put(id, type);
+        return typeEnv;
     }
 
     @Override

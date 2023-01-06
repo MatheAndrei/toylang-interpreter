@@ -5,8 +5,10 @@ import model.ProgramState;
 import model.adt.IHeap;
 import model.adt.ISymTable;
 import model.adt.IExeStack;
+import model.adt.ITypeEnv;
 import model.expression.IExpression;
 import model.type.BoolType;
+import model.type.IType;
 import model.value.BoolValue;
 import model.value.IValue;
 
@@ -38,6 +40,16 @@ public class IfStatement implements IStatement {
             exeStack.push(elseStmt);
 
         return null;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType condType = expr.typeCheck(typeEnv);
+        if (!condType.equals(new BoolType()))
+            throw new InterpreterException("Condition expression " + expr + " isn't a boolean!");
+        thenStmt.typeCheck(typeEnv.deepCopy());
+        elseStmt.typeCheck(typeEnv.deepCopy());
+        return typeEnv;
     }
 
     @Override

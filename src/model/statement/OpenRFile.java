@@ -2,11 +2,9 @@ package model.statement;
 
 import exception.InterpreterException;
 import model.ProgramState;
-import model.adt.IExeStack;
-import model.adt.IFileTable;
-import model.adt.IHeap;
-import model.adt.ISymTable;
+import model.adt.*;
 import model.expression.IExpression;
+import model.type.IType;
 import model.type.StringType;
 import model.value.IValue;
 import model.value.StringValue;
@@ -47,6 +45,14 @@ public class OpenRFile implements IStatement {
         }
 
         return null;
+    }
+
+    @Override
+    public ITypeEnv<String, IType> typeCheck(ITypeEnv<String, IType> typeEnv) throws InterpreterException {
+        IType type = expr.typeCheck(typeEnv);
+        if (!type.equals(new StringType()))
+            throw new InterpreterException("Invalid file path!");
+        return typeEnv;
     }
 
     @Override
