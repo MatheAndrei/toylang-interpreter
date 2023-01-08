@@ -3,10 +3,8 @@ package controller;
 import exception.InterpreterException;
 import model.ProgramState;
 import model.adt.Heap;
-import model.adt.IExeStack;
 import model.adt.IHeap;
 import model.adt.ISymTable;
-import model.statement.IStatement;
 import model.value.IValue;
 import model.value.RefValue;
 import repository.IRepository;
@@ -17,34 +15,19 @@ import java.util.stream.Collectors;
 
 public class Controller {
     private final IRepository repo;
-    private final boolean displayFlag;
     private ExecutorService executor;
-    private final int numThreads = 8;
+    private static final int numThreads = 8;
+    private final boolean displayFlag;
 
     public Controller(IRepository repo, boolean displayFlag) {
         this.repo = repo;
         this.displayFlag = displayFlag;
     }
 
-    public void allStep() {
-        // type check the program
-        try {
-            ProgramState prgState = repo.getProgramStateList().get(0);
-            prgState.typeCheck();
-        } catch (InterpreterException e) {
-            System.err.println("Type Error!");
-            System.err.println(e.getMessage());
-            return;
-        }
-
-        // run
+    public void allStep() throws InterpreterException {
         executor = Executors.newFixedThreadPool(numThreads);
         List<ProgramState> prgStates = removeCompletedPrograms(repo.getProgramStateList());
-        try {
-            printAllProgramStates(prgStates);
-        } catch (InterpreterException e) {
-            System.out.println(e.getMessage());
-        }
+        printAllProgramStates(prgStates);
         while (prgStates.size() > 0) {
             oneStepForAllPrograms(prgStates);
             prgStates = removeCompletedPrograms(repo.getProgramStateList());
@@ -58,36 +41,26 @@ public class Controller {
         repo.setProgramStateList(prgStates);
     }
 
-    private void oneStepForAllPrograms(List<ProgramState> prgStates) {
-        List<Callable<ProgramState>> callList = prgStates.stream()
-                .map((ProgramState prgState) -> (Callable<ProgramState>)(prgState::oneStep))
-                .toList();
-
+    private void oneStepForAllPrograms(List<ProgramState> prgStates) throws InterpreterException {
         try {
-            List<ProgramState> newPrgStates = executor.invokeAll(callList).stream()
-                    .map(future -> {
-                        try {
-                            return future.get();
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
-                        }
-                        return null;
-                    })
-                    .filter(Objects::nonNull)
+            List<Callable<ProgramState>> callList = prgStates.stream()
+                    .map((ProgramState prgState) -> (Callable<ProgramState>)(prgState::oneStep))
                     .toList();
 
+            List<Future<ProgramState>> futures = executor.invokeAll(callList);
+            List<ProgramState> newPrgStates = new ArrayList<>();
+            for (Future<ProgramState> future : futures) {
+                ProgramState prgState = future.get();
+                if (prgState != null)
+                    newPrgStates.add(prgState);
+            }
+
             prgStates.addAll(newPrgStates);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        try {
             printAllProgramStates(prgStates);
-        } catch (InterpreterException e) {
-            System.out.println(e.getMessage());
+            repo.setProgramStateList(prgStates);
+        } catch (Exception e) {
+            throw new InterpreterException(e.getMessage());
         }
-
-        repo.setProgramStateList(prgStates);
     }
 
     private List<ProgramState> removeCompletedPrograms(List<ProgramState> prgStates) {

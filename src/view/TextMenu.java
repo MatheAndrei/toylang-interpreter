@@ -2,9 +2,7 @@ package view;
 
 import view.command.Command;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class TextMenu {
     private final Map<String, Command> commands;
@@ -14,8 +12,10 @@ public class TextMenu {
     }
 
     private void printMenu() {
+        List<Command> allCommands = new ArrayList<>(commands.values());
+        allCommands.sort(Comparator.comparingInt(c -> Integer.parseInt(c.getKey())));
         System.out.println("Menu:");
-        for (Command c : commands.values()) {
+        for (Command c : allCommands) {
             String entry = String.format("%4s:%s", c.getKey(), c.getDescription());
             System.out.println(entry);
         }

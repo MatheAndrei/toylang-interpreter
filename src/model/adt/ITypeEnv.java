@@ -1,7 +1,5 @@
 package model.adt;
 
-import exception.InterpreterException;
-
 import java.util.Map;
 
 public interface ITypeEnv<K, T> {

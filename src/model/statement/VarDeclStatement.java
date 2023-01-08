@@ -5,10 +5,7 @@ import model.ProgramState;
 import model.adt.ISymTable;
 import model.adt.ITypeEnv;
 import model.type.*;
-import model.value.BoolValue;
 import model.value.IValue;
-import model.value.IntValue;
-import model.value.StringValue;
 
 public class VarDeclStatement implements IStatement {
     private final IType type;

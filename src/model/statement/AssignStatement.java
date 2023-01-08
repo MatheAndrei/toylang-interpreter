@@ -28,7 +28,7 @@ public class AssignStatement implements IStatement {
         IValue value = expr.evaluate(symTable, heap);
         IType type = symTable.lookUp(id).getType();
         if (!value.getType().equals(type))
-            throw new InterpreterException("Type of variable " + id + " and type of assigned expression + " + expr + " doesn't match!");
+            throw new InterpreterException("Type of variable " + id + " and type of assigned expression + " + expr + " don't match!");
 
         symTable.update(id, value);
 
@@ -40,7 +40,7 @@ public class AssignStatement implements IStatement {
         IType idType = typeEnv.lookUp(id);
         IType exprType = expr.typeCheck(typeEnv);
         if (!idType.equals(exprType))
-            throw new InterpreterException("Type of variable " + id + " and type of assigned expression " + expr + " doesn't match!");
+            throw new InterpreterException("Type of variable " + id + " and type of assigned expression " + expr + " don't match!");
         return typeEnv;
     }
 
