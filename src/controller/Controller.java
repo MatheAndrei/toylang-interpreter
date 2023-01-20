@@ -26,7 +26,7 @@ public class Controller {
 
     public void allStep() throws InterpreterException {
         executor = Executors.newFixedThreadPool(numThreads);
-        List<ProgramState> prgStates = removeCompletedPrograms(repo.getProgramStateList());
+        List<ProgramState> prgStates = repo.getProgramStateList();
         printAllProgramStates(prgStates);
         while (prgStates.size() > 0) {
             oneStepForAllPrograms(prgStates);
@@ -61,6 +61,24 @@ public class Controller {
         } catch (Exception e) {
             throw new InterpreterException(e.getMessage());
         }
+    }
+
+    public void oneStepGUI(List<ProgramState> prgStates) throws InterpreterException {
+        if (prgStates.isEmpty())
+            return;
+
+        executor = Executors.newFixedThreadPool(numThreads);
+
+        oneStepForAllPrograms(prgStates);
+        prgStates = removeCompletedPrograms(repo.getProgramStateList());
+
+        IHeap<Integer, IValue> newHeap = conservativeGarbageCollector(prgStates);
+        prgStates.forEach(prgState -> {
+            prgState.setHeap(newHeap);
+        });
+
+        executor.shutdownNow();
+        repo.setProgramStateList(prgStates);
     }
 
     private List<ProgramState> removeCompletedPrograms(List<ProgramState> prgStates) {
@@ -123,6 +141,10 @@ public class Controller {
         });
 
         return addresses;
+    }
+
+    public List<ProgramState> getProgramStateList() {
+        return repo.getProgramStateList();
     }
 
     private void printAllProgramStates(List<ProgramState> prgStates) throws InterpreterException {

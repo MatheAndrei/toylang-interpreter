@@ -42,6 +42,11 @@ public class FileTable<K, V> implements IFileTable<K, V> {
     }
 
     @Override
+    public Map<K, V> getContent() {
+        return map;
+    }
+
+    @Override
     public String toString() {
         return map.keySet().toString();
     }

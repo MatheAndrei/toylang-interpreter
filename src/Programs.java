@@ -10,7 +10,27 @@ import model.value.BoolValue;
 import model.value.IntValue;
 import model.value.StringValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Programs {
+    public static List<IStatement> getAllPrograms() {
+        List<IStatement> programs = new ArrayList<>();
+        programs.add(ex1);
+        programs.add(ex2);
+        programs.add(ex3);
+        programs.add(ex4);
+        programs.add(ex5);
+        programs.add(ex6);
+        programs.add(ex7);
+        programs.add(ex8);
+        programs.add(ex9);
+        programs.add(ex10);
+        programs.add(ex11);
+        programs.add(ex12);
+        return programs;
+    }
+
     /*
     EX 1
     int v;

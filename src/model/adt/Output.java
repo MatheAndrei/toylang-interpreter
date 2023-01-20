@@ -16,6 +16,11 @@ public class Output<T> implements IOutput<T> {
     }
 
     @Override
+    public List<T> getContent() {
+        return list;
+    }
+
+    @Override
     public String toString() {
         return list.toString();
     }

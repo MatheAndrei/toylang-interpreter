@@ -81,7 +81,7 @@ public class ProgramState {
     }
 
     public void setHeap(IHeap<Integer, IValue> heap) {
-        this.heap = heap;
+        this.heap.setContent(heap.getContent());
     }
 
     public void setOriginalProgram(IStatement originalProgram) {
@@ -94,6 +94,10 @@ public class ProgramState {
 
     static synchronized private int generateNewId() {
         return numProgramStates++;
+    }
+
+    static synchronized public void resetNumProgramStates() {
+        numProgramStates = 0;
     }
 
     public ProgramState oneStep() throws InterpreterException {

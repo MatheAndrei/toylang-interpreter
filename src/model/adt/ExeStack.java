@@ -32,6 +32,11 @@ public class ExeStack<T> implements IExeStack<T> {
     }
 
     @Override
+    public Stack<T> getContent() {
+        return stack;
+    }
+
+    @Override
     public String toString() {
         if (stack.empty())
             return "[]";

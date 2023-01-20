@@ -33,6 +33,10 @@ public class Repository implements IRepository {
 
     @Override
     public void setProgramStateList(List<ProgramState> prgStates) {
+        if (prgStates.isEmpty()) {
+            this.prgStates.clear();
+            return;
+        }
         this.prgStates = prgStates;
     }
 
