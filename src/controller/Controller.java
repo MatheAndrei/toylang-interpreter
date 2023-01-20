@@ -26,7 +26,7 @@ public class Controller {
 
     public void allStep() throws InterpreterException {
         executor = Executors.newFixedThreadPool(numThreads);
-        List<ProgramState> prgStates = repo.getProgramStateList();
+        List<ProgramState> prgStates = removeCompletedPrograms(repo.getProgramStateList());
         printAllProgramStates(prgStates);
         while (prgStates.size() > 0) {
             oneStepForAllPrograms(prgStates);
