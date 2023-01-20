@@ -2,7 +2,7 @@
 Interpreter for a toy programming language made in Java :coffee:
 
 ### :heavy_check_mark: Features
-- menu driven interface
+- gui / menu driven interface
 - data types:
   - integer
   - boolean
